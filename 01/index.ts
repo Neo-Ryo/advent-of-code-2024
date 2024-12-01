@@ -3,9 +3,7 @@ import { readFile } from '../utils/index'
 
 const text = readFile(__dirname, './input.txt')
 
-const split = text.split('\n')
-
-const [leftArr, rightArr] = split.reduce<Array<Array<number>>>(
+const [leftArr, rightArr] = text.split('\n').reduce<Array<Array<number>>>(
     (acc, curr) => {
         const [l, r] = curr.split(/[ ]+/)
         acc[0].push(Number(l))
