@@ -4,8 +4,8 @@ const lines = readFile(__dirname, 'input.txt').split('\n')
 // const lines = readFile(__dirname, 'test.txt').split('\n')
 
 let safeReports: number = 0
-for (let i = 0; i < lines.length; i++) {
-    const nums = lines[i].split(' ').map((e) => Number(e))
+
+function isLineSafe(nums: number[]) {
     let lastNum: number | null = null
     let type: null | 'inc' | 'dec' = null
     let isSafe: boolean = true
@@ -54,7 +54,33 @@ for (let i = 0; i < lines.length; i++) {
             }
         }
     }
-    if (isSafe) safeReports++
+    return isSafe
 }
 
+function isMoreThanTwoEquals(nums: number[]) {
+    for (let i = 0; i < nums.length; i++) {
+        if (nums.filter((e) => e === nums[i]).length > 2) {
+            return true
+        }
+    }
+    return false
+}
+for (let i = 0; i < lines.length; i++) {
+    const nums = lines[i].split(' ').map((e) => Number(e))
+    if (isMoreThanTwoEquals(nums)) {
+        continue
+    }
+    if (isLineSafe(nums)) {
+        safeReports++
+    } else {
+        for (let i = 0; i < nums.length; i++) {
+            let newArr = [...nums]
+            newArr.splice(i, 1)
+            if (isLineSafe(newArr)) {
+                safeReports++
+                break
+            }
+        }
+    }
+}
 console.log(safeReports)
