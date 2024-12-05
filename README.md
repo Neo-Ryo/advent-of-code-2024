@@ -2,7 +2,7 @@
 
 ## Accomplishment (100%)
 
-    - 8 ✅
+    - 9 ✅
     - 0 🚩
 
 ### Day 01:
@@ -24,6 +24,10 @@
 
     - part 1 ✅
     - part 2 ✅
+
+### Day 05:
+
+    - part 1 ✅
 
 To install dependencies:
 
