@@ -1,16 +1,22 @@
+import os from 'os'
+import path from 'path'
+import { Worker } from 'node:worker_threads'
+const THREADS = Math.floor(os.cpus().length / 2)
+// const process_name = process.argv.slice(2)[0]
+
 import { readFile } from '../utils/index'
 
 const lines = readFile(__dirname, 'input.txt').split('\n')
 // const lines = readFile(__dirname, 'test.txt').split('\n')
 
-export enum Direction {
+enum Direction {
     UP = 'up',
     DOWN = 'down',
     LEFT = 'left',
     RIGHT = 'right',
 }
 
-export type Position = {
+type Position = {
     x: number
     y: number
 }
@@ -27,7 +33,7 @@ function findGuardPosition() {
     return position
 }
 
-export function guardMove(
+function guardMove(
     currentGuardPosition: Position,
     direction: Direction,
     map: string[]
@@ -153,47 +159,9 @@ function setCrateOnThePath(storePosition: Position[]) {
     return linesToCheck
 }
 
-function isInfiniteLoop(newLineToCheck: string[]) {
-    const initialPosition = findGuardPosition()
-    // FIND A WAY TO DETECT INFINITE LOOP...
-    // DETECT IF A POSITION + A DIRECTION HAVE ALREADY BEEN REGISTERED
-    let guardPosition = initialPosition
-    let direction = Direction.UP
-    let isOut = false
-    let storePath: { position: Position; direction: Direction }[] = []
+async function main() {
+    console.time('INIT')
 
-    while (!isOut) {
-        let move = guardMove(guardPosition, direction, newLineToCheck)
-        if (move === 'OUT') {
-            isOut = true
-        } else {
-            guardPosition = move.position
-            direction = move.direction
-            if (
-                !storePath.find(
-                    (s) =>
-                        s.position.x === move.position.x &&
-                        s.position.y === move.position.y &&
-                        s.direction === move.direction
-                )
-            ) {
-                storePath.push({
-                    position: {
-                        x: move.position.x,
-                        y: move.position.y,
-                    },
-                    direction: move.direction,
-                })
-            } else {
-                return true
-            }
-        }
-    }
-
-    return false
-}
-function main() {
-    console.time('start')
     const initialPosition = findGuardPosition()
     let guardPosition = initialPosition
     let direction = Direction.UP
@@ -222,16 +190,61 @@ function main() {
     )
     // SET A CRATE IN ANY GUARD PATHWAY
     const newLinesToCheck = setCrateOnThePath(storePosition)
-    let res = 0
 
-    for (const newLine of newLinesToCheck) {
-        const isInfinite = isInfiniteLoop(newLine)
-        if (isInfinite) {
-            res++
+    let res = 0
+    let workerPromises = []
+
+    let numOfLinesDone = 0
+    const chunkSize = Math.floor(newLinesToCheck.length / THREADS)
+    console.log('newLinesToCheck: ', newLinesToCheck.length)
+    console.log('chunkSize: ', chunkSize)
+    // console.log('TEST: ', newLinesToCheck.slice(3, chunkSize + 3))
+
+    for (let i = 0; i < THREADS; i++) {
+        // console.log('newLinesToCheck: ', newLinesToCheck)
+        // console.log('numOfLinesDone: ', numOfLinesDone)
+
+        if (i === THREADS - 1) {
+            const chunk = newLinesToCheck.slice(numOfLinesDone)
+            console.log('lastChunk: ', chunk.length)
+            workerPromises.push(createWorker(chunk, initialPosition))
+        } else {
+            const chunk = newLinesToCheck.slice(
+                numOfLinesDone,
+                numOfLinesDone + chunkSize
+            )
+            numOfLinesDone += chunkSize
+            console.log('chunk: ', chunk.length)
+            workerPromises.push(createWorker(chunk, initialPosition))
         }
     }
-    console.timeEnd('start')
-    return res
+
+    console.log('workerPromises.length: ', workerPromises.length)
+    const thread_results = await Promise.all(workerPromises)
+    console.log(
+        'ULTIMATE RESULT: ',
+        thread_results.reduce<number>(
+            (acc: number, curr) => acc + Number(curr),
+            0
+        )
+    )
+    // // return res
+    console.timeEnd('INIT')
 }
 
-console.log(main())
+// THREADS
+function createWorker(chunk: string[][], initialPosition: Position) {
+    return new Promise(function (resolve, reject) {
+        const worker = new Worker(path.join(__dirname, 'worker.ts'), {
+            workerData: { chunk, initialPosition },
+        })
+        worker.on('exit', (exitCode) => console.log('EXIT: ', exitCode))
+        worker.on('message', (data) => {
+            resolve(data)
+        })
+        worker.on('error', (msg) => {
+            reject(`An error ocurred: ${msg}`)
+        })
+    })
+}
+main()
