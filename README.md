@@ -1,6 +1,6 @@
 # advent-2024
 
-## Accomplishment (17/18)
+## Accomplishment (18/19)
 
     - 16 ✅
     - 1 🚩
@@ -52,6 +52,7 @@
 ### Day 10:
 
     - part 1 ✅
+    - part 2 ✅
 
 To install dependencies:
 
