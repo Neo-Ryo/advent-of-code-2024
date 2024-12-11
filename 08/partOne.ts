@@ -24,8 +24,6 @@ function getAllAntenasPosition(map: string[]) {
     return res
 }
 
-// console.log(getAllAntenasPosition(lines))
-
 function antiNodePosition(pair: Position[]): Position {
     let res: Position = { x: 0, y: 0 }
     const { x: xa, y: ya } = pair[0]
@@ -67,8 +65,6 @@ function createNewMapWithAntiNodes(map: string[], antenaPositions: Position[]) {
             }
         }
     }
-    // console.log('combis: ', combis)
-    // console.log('combis: ', combis.length)
     for (const pair of combis) {
         // make antinodes
         const [nodeA, nodeB] = [
@@ -79,8 +75,6 @@ function createNewMapWithAntiNodes(map: string[], antenaPositions: Position[]) {
             // check if spot free
             if (nMap[nodeA.y][nodeA.x] !== '#') {
                 // update map
-                // console.log(nMap[nodeA.y][nodeA.x])
-
                 nMap[nodeA.y] = nMap[nodeA.y]
                     .split('')
                     .reduce((acc, curr, i) => {
@@ -110,7 +104,6 @@ function createNewMapWithAntiNodes(map: string[], antenaPositions: Position[]) {
             }
         }
     }
-    // console.log(nMap.join('\n'))
     return nMap
 }
 
@@ -125,14 +118,11 @@ function countAntiNodes(map: string[]): number {
 }
 function main() {
     const allPos = getAllAntenasPosition(lines)
-    // console.log(Object.keys(allPos))
     let nLines = [...lines]
-    // console.log('MAP BEFORE: ', nLines.join('\n'))
     for (const key of Object.keys(allPos)) {
         if (allPos[key].length > 1) {
             nLines = createNewMapWithAntiNodes(nLines, allPos[key])
         }
-        // console.log(nLines.join('\n'))
     }
     console.log(countAntiNodes(nLines))
 }
