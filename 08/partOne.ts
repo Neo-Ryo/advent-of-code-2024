@@ -1,6 +1,6 @@
 import { readFile } from '../utils/index'
-const lines = readFile(__dirname, 'input.txt').split('\n')
-// const lines = readFile(__dirname, 'test.txt').split('\n')
+// const lines = readFile(__dirname, 'input.txt').split('\n')
+const lines = readFile(__dirname, 'test.txt').split('\n')
 
 type Position = {
     x: number
@@ -104,6 +104,9 @@ function createNewMapWithAntiNodes(map: string[], antenaPositions: Position[]) {
             }
         }
     }
+    console.log(nMap.join('\n'))
+    console.log('---')
+
     return nMap
 }
 
