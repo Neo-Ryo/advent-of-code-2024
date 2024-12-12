@@ -1,6 +1,6 @@
 import { readFile } from '../utils/index'
-const line = readFile(__dirname, 'input.txt')
-// const line = readFile(__dirname, 'test.txt')
+// const line = readFile(__dirname, 'input.txt')
+const line = readFile(__dirname, 'test.txt')
 
 function makeDiskMap(line: string) {
     let diskMap = ''
@@ -52,7 +52,7 @@ function defragDisk(diskData: string) {
 function main(line: string) {
     const defraged = defragDisk(line)
     // make checksum
-    // console.log(defraged)
+    console.log(defraged)
 
     const checksum = defraged.reduce((acc, curr, i) => {
         const n = Number(curr)
