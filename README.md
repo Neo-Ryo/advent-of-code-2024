@@ -57,6 +57,7 @@
 ### Day 11:
 
     - part 1 ✅
+    - part 1 🚩
 
 To install dependencies:
 

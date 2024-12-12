@@ -22,8 +22,6 @@ function turnStoneIntoNewOnes(stone: number): Array<number> {
     return res
 }
 
-// console.log(turnStoneIntoNewOnes(4))
-
 function blink(array: number[]): number[] {
     let res: number[] = []
     // do some
@@ -36,14 +34,8 @@ function blink(array: number[]): number[] {
 
 function main(line: string, blinkNumber: number) {
     let arr = line.split(' ').map((e) => Number(e))
-    for (let i = 0; i < blinkNumber; i++) {
-        arr = blink(arr)
-        // console.log(arr)
-    }
-    // console.log(arr)
-
-    console.log(arr.length)
+    let res = arr.length
 }
 
-main(line, 25)
+main(line, 2)
 // console.log(Number('000'))
