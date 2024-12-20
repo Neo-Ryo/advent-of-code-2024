@@ -1,10 +1,5 @@
 # advent-2024
 
-## Accomplishment (18/19)
-
-    - 16 ✅
-    - 1 🚩
-
 ### Day 01:
 
     - part 1 ✅
@@ -58,6 +53,15 @@
 
     - part 1 ✅
     - part 1 🚩
+
+.
+.
+.
+not done + failures
+
+### Day 19
+
+    - part 1 ✅
 
 To install dependencies:
 
