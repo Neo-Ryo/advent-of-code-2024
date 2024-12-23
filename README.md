@@ -62,6 +62,7 @@ not done + failures
 ### Day 19
 
     - part 1 ✅
+    - part 2 🚩
 
 To install dependencies:
 
